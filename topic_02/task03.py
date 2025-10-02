@@ -15,7 +15,7 @@ def div(a:float,b:float):
 def calc():
     a = float(input("Enter first number: "))
     b=float(input("Enter second number: "))
-    op = input("Operation mod: +,-,*,/")
+    op = input("Operation mod: +,-,*,/ ")
     match op:
         case"+":
             result = add(a,b)
