@@ -51,38 +51,44 @@ def deleteElement():
 
 def updateElement():
     name = input("Please enter name to be updated: ")
-    found = False
-    for item in list:
-        if item["name"]==name:
-            upd = input(f"What do you wanna change? N - name, P - phone, A - age, G - group, Q - quit: ")
-            match upd:
-                case "N" | "n":
+    deletePosition = -1
+    for index, newitem in enumerate(list):  
+        if newitem["name"] == name:
+            deletePosition = index  
+            item = newitem         
+            break
+    if deletePosition == -1:
+        print("Element was not found")
+        return
+    list.pop(deletePosition)
+    upd = input(f"What do you wanna change? N - name, P - phone, A - age, G - group, Q - quit: ")
+    match upd:
+        case "N" | "n":
                     newname = input(f"Enter new name for student: ")
                     item["name"] = newname
-                case "P" | "p":
+        case "P" | "p":
                     newphone = input(f"Enter new phone for student: ")
                     item["phone"] = newphone
-                case "A" | "a":
+        case "A" | "a":
                     newage = input(f"Enter new age for student: ")
                     item["age"] = newage
-                case "G" | "g":
+        case "G" | "g":
                     newgroup = input(f"Enter new group for student: ")
                     item["group"] = newgroup
-                case "Q" | "q":
+        case "Q" | "q":
                     print("Update canceled")
                     return
-                case _:
+        case _:
                     print("Wrong choice")
-            print(f"Student was update")
-            found = True
+    insertPosition = 0
+    for s in list:
+        if item["name"] > s["name"]:
+            insertPosition += 1
+        else:
             break
-    if not found:
-        print(f"Element wasn`t found")
-        return
-    for i in range(len(list)):
-        for j in range(i + 1, len(list)):
-            if list[i]["name"] > list[j]["name"]:
-                list[i], list[j] = list[j], list[i]
+        
+    list.insert(insertPosition, item)
+    print("Student was update")
     # implementation required
 
 def main():
