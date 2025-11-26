@@ -1,4 +1,4 @@
-from lab02 import students, addNewElement, deleteElement, updateElement, printAllList
+from lab02 import students, printAllList
 
 def add_student_direct(name, phone, age, group):
     students.append({"name": name, "phone": phone, "age": age, "group": group})
