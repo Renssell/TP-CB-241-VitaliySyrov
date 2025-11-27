@@ -27,13 +27,13 @@ def printAllList():
         print(f"Student name is {elem['name']}, Phone is {elem['phone']}, "
               f"Age is {elem['age']}, Group is {elem['group']}")
 
-def addNewElement():
-    name = input("Pease enter student name: ")
-    phone = input("Please enter student phone: ")
-    age = input("Please enter age of student: ")
-    group = input("Please enter the group of student: ")
-    newItem = {"name": name, "phone": phone, "age":age, "group":group}
-    # find insert position
+def addNewElement(name, phone, age, group):
+    newItem = {
+        "name": name,
+        "phone": phone,
+        "age": age,
+        "group": group
+    }
     insertPosition = 0
     for item in students:
         if name > item["name"]:
@@ -41,66 +41,51 @@ def addNewElement():
         else:
             break
     students.insert(insertPosition, newItem)
-    print("New element has been added")
-    return
 
-def deleteElement():
-    name = input("Please enter name to be delated: ")
+def deleteElement(name):
+    global students
+    for i, item in enumerate(students):
+        if item["name"] == name:
+            del students[i]
+            return True
+    return False
+
+
+def updateElement(name, new_name=None, new_phone=None, new_age=None, new_group=None):
+    global students
     deletePosition = -1
-    for item in students:
-        if name == item["name"]:
-            deletePosition = students.index(item)
-            break
-    if deletePosition == -1:
-        print("Element was not found")
-    else:
-        print("Dele position " + str(deletePosition))
-        # list.pop(deletePosition)
-        del students[deletePosition]
-    return
-
-
-def updateElement():
-    name = input("Please enter name to be updated: ")
-    deletePosition = -1
-    for index, newitem in enumerate(students):  
+    item = None
+    for index, newitem in enumerate(students):
         if newitem["name"] == name:
-            deletePosition = index  
-            item = newitem         
+            deletePosition = index
+            item = newitem
             break
     if deletePosition == -1:
-        print("Element was not found")
-        return
+        return False  
+
     students.pop(deletePosition)
-    upd = input(f"What do you wanna change? N - name, P - phone, A - age, G - group, Q - quit: ")
-    match upd:
-        case "N" | "n":
-                    newname = input(f"Enter new name for student: ")
-                    item["name"] = newname
-        case "P" | "p":
-                    newphone = input(f"Enter new phone for student: ")
-                    item["phone"] = newphone
-        case "A" | "a":
-                    newage = input(f"Enter new age for student: ")
-                    item["age"] = newage
-        case "G" | "g":
-                    newgroup = input(f"Enter new group for student: ")
-                    item["group"] = newgroup
-        case "Q" | "q":
-                    print("Update canceled")
-                    return
-        case _:
-                    print("Wrong choice")
+
+    if new_name is not None:
+        item["name"] = new_name
+    if new_phone is not None:
+        item["phone"] = new_phone
+    if new_age is not None:
+        item["age"] = new_age
+    if new_group is not None:
+        item["group"] = new_group
+
     insertPosition = 0
     for s in students:
         if item["name"] > s["name"]:
             insertPosition += 1
         else:
             break
-        
+
     students.insert(insertPosition, item)
-    print("Student was update")
-    # implementation required
+
+    return True
+
+
 
 def main():
     csv_input = "lab2.csv"
@@ -113,11 +98,27 @@ def main():
         choice = input("Specify action [C create, U update, D delete, P print, X exit]: ")
         match choice:
             case "C" | "c":
-                addNewElement()
+                name = input("Enter name: ")
+                phone = input("Enter phone: ")
+                age = input("Enter age: ")
+                group = input("Enter group: ")
+                addNewElement(name, phone, age, group)
             case "U" | "u":
-                updateElement()
+                name = input("Name to update: ")
+                if not any(s["name"] == name for s in students):
+                        print("Element was not found")
+                        continue
+                new_name = input("New name (enter to skip): ") or None
+                new_phone = input("New phone (enter to skip): ") or None
+                new_age = input("New age (enter to skip): ") or None
+                new_group = input("New group (enter to skip): ") or None
+                updateElement(name, new_name, new_phone, new_age, new_group)            
             case "D" | "d":
-                deleteElement()
+                name = input("Name to delete: ")
+                if deleteElement(name):
+                    print(f"Deleted student {name}")
+                else:
+                    print("Element was not found")
             case "P" | "p":
                 printAllList()
             case "X" | "x":
